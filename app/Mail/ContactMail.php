@@ -16,10 +16,10 @@ class ContactMail extends Mailable
      *
      * @return void
      */
-    public function __construct($request)
+    public function __construct($contact)
     {
 
-        $this->request = $request;
+        $this->contact = $contact;
     }
 
     /**
@@ -30,9 +30,8 @@ class ContactMail extends Mailable
     public function build()
     {
 
-        return $this->from("example@example.com")
-            ->subject("お問い合わせ内容確認")
+        return $this->subject("お問い合わせ内容確認")
             ->view("contacts.mail")
-            ->with(["request" => $this->request]);
+            ->with(["contact" => $this->contact]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\ConflictException;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,24 +15,35 @@ class Contact extends Model
 {
 
     /**
-     * 複数代入しない属性
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $fillable = [
+        "name",
+        "email",
+        "content"
+    ];
 
     /**
      * 問い合わせの存在チェック
      *
-     * @param $request
+     * @param $contact
      * @return bool
      */
-    public static function exists($request): bool
+    public function isDuplicate($contact)
     {
 
-        return self::where("name", $request->name)
-            ->where("email", $request->email)
-            ->where("content", $request->content)
+        $exists = self::where("name", $contact->name)
+            ->where("email", $contact->email)
+            ->where("content", $contact->content)
             ->exists();
+
+        if ($exists) {
+
+            throw new ConflictException("既に問い合わせが存在します。");
+        }
+
+        return;
     }
 }

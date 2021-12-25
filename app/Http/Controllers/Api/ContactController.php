@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Contact;
+use Illuminate\Http\Request;
 use App\Http\Requests\ContactRequest;
 use App\Http\Resources\Contact\Contact as ContactResource;
-use App\Models\Contact;
-use App\Mail\ContactMail;
-use Illuminate\Support\Facades\Mail;
+use App\Exceptions\ForbiddenException;
+use App\Exceptions\ModelQueryException;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 /**
  * 問い合わせコントローラー
@@ -16,7 +17,7 @@ use Illuminate\Http\Request;
  * Class ContactController
  * @package App\Http\Controllers\Api
  */
-class ContactController extends ApiController
+class ContactController extends Controller
 {
 
     /**
@@ -26,6 +27,7 @@ class ContactController extends ApiController
      */
     protected $referer = [
         //
+        ""
     ];
 
     /**
@@ -34,35 +36,26 @@ class ContactController extends ApiController
      * @param  ContactRequest $request
      * @return ContactResource|\Illuminate\Http\JsonResponse
      */
-    public function store(ContactRequest $request)
+    public function store(ContactRequest $request, Contact $contact)
     {
 
-        if (Contact::exists($request)) {
+        if (!in_array($request->headers->get("referer"), $this->referer, true)) {
 
-            return $this->respondConflict("既に問い合わせが存在します。");
-        }
-
-        if (!in_array($request->headers->get("referer"), $this->referer)) {
-
-            return $this->respondForbidden("アクセス権限がありません。");
+            throw new ForbiddenException("アクセス権限がありません。");
         }
 
         try {
 
-            $query = array_merge($request->validated(), array(
-                "ip_address" => $request-> ip(),
-                "contact_at" => date("Y-m-d H:i:s")
-            ));
-
-            $contact = new Contact($query);
+            $contact = Contact::make()->fill($request->validated());
+            $contact->isDuplicate($contact);
+            $contact->ip_address = $request->ip();
+            $contact->contact_at = now();
             $contact->save();
         } catch (QueryException $e) {
 
-            return $this->respondInvalidQuery($e->getMessage());
+            throw new ModelQueryException($e->getMessage());
         }
 
-        Mail::to($request->email)->send(new ContactMail($request->all()));
-
-        return new ContactResource($contact);
+        return $contact;
     }
 }

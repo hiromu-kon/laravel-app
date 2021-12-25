@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use App\Traits\JsonRespondController;
+use App\Exceptions\BadRequestException;
 
 /**
  * HTTPS判定ミドルウェア
@@ -14,7 +14,6 @@ use App\Traits\JsonRespondController;
  */
 class OnlyHttps
 {
-    use JsonRespondController;
 
     /**
      * Handle an incoming request.
@@ -27,9 +26,9 @@ class OnlyHttps
     {
 
         if ((empty($_SERVER["HTTPS"]) || $_SERVER["HTTPS"] !== "on") 
-            && config('app.env') === "production") {
+            && app()->environment('production')) {
 
-            return $this->respondBadRequest("リクエストが不正です。");
+            throw new BadRequestException("リクエストが不正です。");
         }
 
         return $next($request);
