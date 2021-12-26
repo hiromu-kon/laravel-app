@@ -41,7 +41,7 @@ class ContactController extends Controller
 
         if (!in_array($request->headers->get("referer"), $this->referer, true)) {
 
-            throw new ForbiddenException("アクセス権限がありません。");
+            throw new ForbiddenException();
         }
 
         try {

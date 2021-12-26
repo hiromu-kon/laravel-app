@@ -14,22 +14,6 @@ class ForbiddenException extends Exception
 {
 
     /**
-     * @var $message
-     */
-    protected $message;
-
-    /**
-     * ForbiddenException constructor
-     * 
-     * @param $message
-     */
-    public function __construct($message)
-    {
-
-        $this->message = $message;
-    }
-
-    /**
      * report
      */
     public function report()
@@ -47,7 +31,7 @@ class ForbiddenException extends Exception
         return response()->json(
             array(
                 "code"    => 403,
-                "message" => $this->message
+                "message" => "アクセス権限がありません。"
             ),
             403
         );

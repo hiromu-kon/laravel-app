@@ -28,7 +28,7 @@ class OnlyHttps
         if ((empty($_SERVER["HTTPS"]) || $_SERVER["HTTPS"] !== "on") 
             && app()->environment('production')) {
 
-            throw new BadRequestException("リクエストが不正です。");
+            throw new BadRequestException();
         }
 
         return $next($request);

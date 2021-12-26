@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Mail\ContactMail;
+use Illuminate\Support\Facades\Mail;
 use App\Exceptions\ConflictException;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +27,16 @@ class Contact extends Model
         "content"
     ];
 
+
+    protected static function boot()
+    {
+
+        parent::boot();
+        static::created(function($contact) {
+            Mail::to($contact->email)->send(new ContactMail($contact));
+        });
+    }
+
     /**
      * 問い合わせの存在チェック
      *
@@ -34,10 +46,7 @@ class Contact extends Model
     public function isDuplicate($contact)
     {
 
-        $exists = self::where("name", $contact->name)
-            ->where("email", $contact->email)
-            ->where("content", $contact->content)
-            ->exists();
+        $exists = self::where([['name', $contact->name], ['email', $contact->email], ['content', $contact->content]])->exists();
 
         if ($exists) {
 

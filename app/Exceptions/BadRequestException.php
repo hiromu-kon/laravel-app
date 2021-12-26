@@ -14,22 +14,6 @@ class BadRequestException extends Exception
 {
 
     /**
-     * @var $message
-     */
-    protected $message;
-
-    /**
-     * BadRequestException constructor
-     * 
-     * @param $message
-     */
-    public function __construct($message)
-    {
-
-        $this->message = $message;
-    }
-
-    /**
      * report
      */
     public function report()
@@ -47,7 +31,7 @@ class BadRequestException extends Exception
         return response()->json(
             array(
                 "code"    => 400,
-                "message" => $this->message
+                "message" => "リクエストが不正です。"
             ),
             400
         );
