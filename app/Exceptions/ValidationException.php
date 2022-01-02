@@ -46,8 +46,8 @@ class ValidationException extends Exception
     {
         return response()->json(
             array(
-                "code"    => 422,
-                "message" => $this->validator->errors()
+                'code'    => 422,
+                'message' => $this->validator->errors()
             ),
             422
         );

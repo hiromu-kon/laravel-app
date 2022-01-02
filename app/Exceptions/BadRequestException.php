@@ -30,8 +30,8 @@ class BadRequestException extends Exception
     {
         return response()->json(
             array(
-                "code"    => 400,
-                "message" => "リクエストが不正です。"
+                'code'    => 400,
+                'message' => 'リクエストが不正です。'
             ),
             400
         );

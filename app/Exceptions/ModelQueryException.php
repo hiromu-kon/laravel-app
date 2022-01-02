@@ -46,8 +46,8 @@ class ModelQueryException extends Exception
     {
         return response()->json(
             array(
-                "code"    => 500,
-                "message" => $this->message
+                'code'    => 500,
+                'message' => $this->message
             ),
             500
         );

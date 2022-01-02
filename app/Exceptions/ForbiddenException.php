@@ -30,8 +30,8 @@ class ForbiddenException extends Exception
     {
         return response()->json(
             array(
-                "code"    => 403,
-                "message" => "アクセス権限がありません。"
+                'code'   => 403,
+                'message' => 'アクセス権限がありません。'
             ),
             403
         );

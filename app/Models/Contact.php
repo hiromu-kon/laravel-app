@@ -22,9 +22,9 @@ class Contact extends Model
      * @var array
      */
     protected $fillable = [
-        "name",
-        "email",
-        "content"
+        'name',
+        'email',
+        'content'
     ];
 
 
@@ -50,7 +50,7 @@ class Contact extends Model
 
         if ($exists) {
 
-            throw new ConflictException("既に問い合わせが存在します。");
+            throw new ConflictException('既に問い合わせが存在します。');
         }
 
         return;

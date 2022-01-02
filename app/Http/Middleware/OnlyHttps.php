@@ -25,7 +25,7 @@ class OnlyHttps
     public function handle(Request $request, Closure $next)
     {
 
-        if ((empty($_SERVER["HTTPS"]) || $_SERVER["HTTPS"] !== "on") 
+        if ((empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') 
             && app()->environment('production')) {
 
             throw new BadRequestException();

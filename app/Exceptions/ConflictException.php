@@ -46,8 +46,8 @@ class ConflictException extends Exception
     {
         return response()->json(
             array(
-                "code"    => 409,
-                "message" => $this->message
+                'code'    => 409,
+                'message' => $this->message
             ),
             409
         );

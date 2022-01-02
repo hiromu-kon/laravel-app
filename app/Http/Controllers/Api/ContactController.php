@@ -27,7 +27,7 @@ class ContactController extends Controller
      */
     protected $referer = [
         //
-        ""
+        ''
     ];
 
     /**
@@ -39,7 +39,7 @@ class ContactController extends Controller
     public function store(ContactRequest $request, Contact $contact)
     {
 
-        if (!in_array($request->headers->get("referer"), $this->referer, true)) {
+        if (!in_array($request->headers->get('referer'), $this->referer, true)) {
 
             throw new ForbiddenException();
         }

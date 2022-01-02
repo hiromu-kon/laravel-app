@@ -32,18 +32,18 @@ class ContactRequest extends ApiRequest
     {
 
         return [
-            "name" => [
-                "required",
-                "max:50"
+            'name' => [
+                'required',
+                'max:50'
             ],
-            "email" => [
-                "required",
-                "max:255",
-                "email:strict,dns,spoof"
+            'email' => [
+                'required',
+                'max:255',
+                'email:strict,dns,spoof'
             ],
-            "content" => [
-                "required",
-                "max:1000"
+            'content' => [
+                'required',
+                'max:1000'
             ]
         ];
     }
@@ -57,12 +57,12 @@ class ContactRequest extends ApiRequest
     {
 
         return [
-            "name.required"    => "名前は必須項目です",
-            "name.max"         => "名前は50文字以内で入力してください",
-            "email.required"   => "メールアドレスは必須項目です",
-            "email.max"        => "メールアドレスは255文字以内で入力してください",
-            "content.required" => "問い合わせ内容は必須項目です",
-            "content.max"      => "問い合わせ内容は1000文字以内で入力してください"
+            'name.required'    => '名前は必須項目です',
+            'name.max'         => '名前は50文字以内で入力してください',
+            'email.required'   => 'メールアドレスは必須項目です',
+            'email.max'        => 'メールアドレスは255文字以内で入力してください',
+            'content.required' => '問い合わせ内容は必須項目です',
+            'content.max'      => '問い合わせ内容は1000文字以内で入力してください'
         ];
     }
 }

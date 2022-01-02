@@ -26,9 +26,9 @@ abstract class ApiRequest extends FormRequest
     {
 
         $data = [
-            "error" => [
-                "message" => $validator->errors()->toArray(),
-                "code"    => 422,
+            'error' => [
+                'message' => $validator->errors()->toArray(),
+                'code'    => 422,
             ],
         ];
 
