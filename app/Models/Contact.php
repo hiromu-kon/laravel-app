@@ -6,6 +6,7 @@ use App\Mail\ContactMail;
 use Illuminate\Support\Facades\Mail;
 use App\Exceptions\ConflictException;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 /**
  * 問い合わせモデル
@@ -54,5 +55,35 @@ class Contact extends Model
         }
 
         return;
+    }
+
+    /**
+     * 開始日よりも未来のお問い合わせ日を取得
+     *
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param  $start_date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeStartDate($query, $start_date)
+    {
+ 
+        $date = new Carbon($start_date);
+
+        return $query->where('contact_at', '>', $date->format('Y-m-d H:i:s'));
+    }
+
+    /**
+     * 終了日よりも過去のお問い合わせ日を取得
+     *
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param $end_date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeEndDate($query, $end_date)
+    {
+
+        $date = new Carbon($end_date);
+
+        return $query->where('contact_at', '<', $date->format('Y-m-d H:i:s'));
     }
 }

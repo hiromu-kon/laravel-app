@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Contact;
-use Illuminate\Http\Request;
-use App\Http\Requests\ContactRequest;
-use App\Http\Resources\Contact\Contact as ContactResource;
+use App\Http\Requests\StoreContactRequest;
+use App\Http\Requests\IndexContactRequest;
+use App\Http\Resources\IndexContactResource;
 use App\Exceptions\ForbiddenException;
 use App\Exceptions\ModelQueryException;
 use Illuminate\Database\QueryException;
@@ -33,10 +33,10 @@ class ContactController extends Controller
     /**
      * 問い合わせを保存
      *
-     * @param  ContactRequest $request
-     * @return ContactResource|\Illuminate\Http\JsonResponse
+     * @param  StoreContactRequest $request
+     * @return $contact
      */
-    public function store(ContactRequest $request, Contact $contact)
+    public function store(StoreContactRequest $request, Contact $contact)
     {
 
         if (!in_array($request->headers->get('referer'), $this->referer, true)) {
@@ -55,6 +55,43 @@ class ContactController extends Controller
 
             throw new ModelQueryException($e->getMessage());
         }
+
+        return $contact;
+    }
+
+    /**
+     * 問い合わせ一覧を取得
+     *
+     * @param  IndexContactRequest $request
+     * @return \Illuminate\Http\Resources|JsonResponse
+     */
+    public function index(IndexContactRequest $request)
+    {
+
+        $page         = $request->has('page') ? $request->input('page') : 1;
+        $start_date   = $request->input('start_date');
+        $end_date     = $request->input('end_date');
+
+        dd($start_date);
+        $query = Contact::query()->when($start_date, function($query, $start_date) {
+            return $query->startDate($start_date);
+        });
+
+        $query->when($end_date, function($query, $end_date) {
+            return $query->endDate($end_date);
+        })->get();
+
+        return IndexContactResource::collection($query->paginate(10, ['*'], 'page', $page));
+    }
+
+    /**
+     * 問い合わせ詳細を取得
+     *
+     * @param  Contact $contact
+     * @return $contact
+     */
+    public function show(Contact $contact)
+    {
 
         return $contact;
     }

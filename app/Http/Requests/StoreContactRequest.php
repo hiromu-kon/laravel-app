@@ -5,12 +5,12 @@ namespace App\Http\Requests;
 use Illuminate\Validation\Rule;
 
 /**
- * 問い合わせリクエストクラス
+ * 問い合わせ保存リクエストクラス
  *
- * Class ContactRequest
+ * Class StoreContactRequest
  * @package App\Http\Requests
  */
-class ContactRequest extends ApiRequest
+class StoreContactRequest extends ApiRequest
 {
 
     /**
