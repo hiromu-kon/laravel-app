@@ -6,6 +6,7 @@ use App\Mail\ContactMail;
 use Illuminate\Support\Facades\Mail;
 use App\Exceptions\ConflictException;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 /**
  * 問い合わせモデル
@@ -54,5 +55,28 @@ class Contact extends Model
         }
 
         return;
+    }
+
+    /**
+     * 開始日から終了日までのお問い合わせを取得
+     *
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param  $startDate
+     * @param  $endDate
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeTermBetween($query, $startDate, $endDate)
+    {
+ 
+        $startDate = new Carbon($startDate);
+        $endDate   = new Carbon($endDate);
+
+        return $query
+            ->when($startDate, function($query, $startDate) {
+                return $query->where('contact_at', '>', $startDate->format('Y-m-d H:i:s'));
+            })
+             ->when($endDate, function($query, $endDate) {
+                return $query->where('contact_at', '<', $endDate->format('Y-m-d H:i:s'));
+            });
     }
 }
