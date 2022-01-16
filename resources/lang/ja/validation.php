@@ -158,6 +158,16 @@ return [
         'email' => 'メールアドレス',
         'password' => 'パスワード',
         'terms' => '規約',
+        'start_date' => '開始日',
+        'end_date' => '終了日'
     ],
 
+    'values' => [
+        'start_date' => [
+            'today' => '今日'
+        ],
+        'end_date' => [
+            'today' => '今日'
+        ],
+    ]
 ];

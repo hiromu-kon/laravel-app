@@ -68,20 +68,12 @@ class ContactController extends Controller
     public function index(IndexContactRequest $request)
     {
 
-        $page         = $request->has('page') ? $request->input('page') : 1;
-        $start_date   = $request->input('start_date');
-        $end_date     = $request->input('end_date');
+        $startDate = $request->startDate;
+        $endDate   = $request->endDate;
 
-        dd($start_date);
-        $query = Contact::query()->when($start_date, function($query, $start_date) {
-            return $query->startDate($start_date);
-        });
-
-        $query->when($end_date, function($query, $end_date) {
-            return $query->endDate($end_date);
-        })->get();
-
-        return IndexContactResource::collection($query->paginate(10, ['*'], 'page', $page));
+        return IndexContactResource::collection(Contact::query()
+            ->termBetween($startDate, $endDate)
+            ->paginate(10));
     }
 
     /**

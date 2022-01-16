@@ -58,32 +58,25 @@ class Contact extends Model
     }
 
     /**
-     * 開始日よりも未来のお問い合わせ日を取得
+     * 開始日から終了日までのお問い合わせを取得
      *
      * @param \Illuminate\Database\Eloquent\Builder  $query
-     * @param  $start_date
+     * @param  $startDate
+     * @param  $endDate
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeStartDate($query, $start_date)
+    public function scopeTermBetween($query, $startDate, $endDate)
     {
  
-        $date = new Carbon($start_date);
+        $startDate = new Carbon($startDate);
+        $endDate   = new Carbon($endDate);
 
-        return $query->where('contact_at', '>', $date->format('Y-m-d H:i:s'));
-    }
-
-    /**
-     * 終了日よりも過去のお問い合わせ日を取得
-     *
-     * @param \Illuminate\Database\Eloquent\Builder  $query
-     * @param $end_date
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeEndDate($query, $end_date)
-    {
-
-        $date = new Carbon($end_date);
-
-        return $query->where('contact_at', '<', $date->format('Y-m-d H:i:s'));
+        return $query
+            ->when($startDate, function($query, $startDate) {
+                return $query->where('contact_at', '>', $startDate->format('Y-m-d H:i:s'));
+            })
+             ->when($endDate, function($query, $endDate) {
+                return $query->where('contact_at', '<', $endDate->format('Y-m-d H:i:s'));
+            });
     }
 }
